@@ -7,7 +7,7 @@ public class Conexao {
 
     private static final String URL = "jdbc:mysql://localhost:3306/chatbot";
     private static final String USER = "root";
-    private static final String PASSWORD = "My_Luk04";
+    private static final String PASSWORD = "MyLuk_04";
 
     public static Connection conectar() {
         try {

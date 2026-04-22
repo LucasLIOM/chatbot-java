@@ -1,48 +1,36 @@
 package main.java.com.chatbot;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.List;
+import java.util.Scanner;
+import main.java.com.chatbot.config.Conexao;
+import main.java.com.chatbot.dao.ClienteDAO;
+import main.java.com.chatbot.model.Cliente;
 
 public class Main {
 
     public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:3306/chatbot";
-        String user = "root";
-        String password = "MyLuk_04";
 
+        Scanner sc = new Scanner(System.in);
 
+        try (Connection conn = Conexao.conectar()) {
+            ClienteDAO clienteDAO = new ClienteDAO(conn);
+            
+          /*   clienteDAO.deletarTodos();
+            //Cliente cliente = new Cliente(nome, telefone);
 
-        try {
-            Connection conn = DriverManager.getConnection(url, user, password);
+            List<Cliente> clientes = clienteDAO.listarCliente();
 
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM cliente");
-
-            while (rs.next()) {
-                System.out.println(rs.getString("nome"));
-            }
+            for (Cliente c : clientes) {
+                System.out.println("ID: " + c.getIdCliente());
+                System.out.println("Nome: " + c.getNome());
+                System.out.println("Telefone: " + c.getTelefone());
+                System.out.println("----------------------");
+            }*/
 
         } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
         }
 
-
-       /* try {
-            Connection conn = DriverManager.getConnection(url, user, password);
-
-            String sql = "INSERT INTO cliente (nome, telefone) VALUES (?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, "Lucas");
-            stmt.setString(2, "11999999999");
-
-            stmt.executeUpdate();
-
-            System.out.println("Cliente inserido!");
-        } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
-        } */
+        sc.close();
     }
 }
