@@ -10,7 +10,7 @@ public class Mensagem {
     private String tipo;
     private LocalDateTime dataHora;
 
-    public Mensagem(Cliente cliente, String texto, String tipo) {
+    public Mensagem(Cliente cliente, String texto, String tipo, LocalDateTime dataHora) {
         this.cliente = cliente;
         this.texto = texto;
         this.tipo = tipo;

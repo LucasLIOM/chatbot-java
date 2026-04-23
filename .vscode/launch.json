@@ -6,6 +6,13 @@
       "name": "Main",
       "request": "launch",
       "mainClass": "main.java.com.chatbot.Main",
+      "projectName": "chatbot-java_4d0495b8"
+    },
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "main.java.com.chatbot.Main",
       "projectName": "chatbot_f5dff33c"
     },
     {

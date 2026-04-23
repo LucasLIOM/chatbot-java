@@ -6,20 +6,17 @@ public class Cliente {
     private String nome;
     private String telefone;
 
-    // 🔹 Construtor para inserir (sem ID)
     public Cliente(String nome, String telefone) {
         this.nome = nome;
         this.telefone = telefone;
     }
 
-    // 🔹 Construtor completo (quando vem do banco)
     public Cliente(Integer idCliente, String nome, String telefone) {
         this.idCliente = idCliente;
         this.nome = nome;
         this.telefone = telefone;
     }
 
-    // 🔹 Getters e Setters
     public Integer getIdCliente() {
         return idCliente;
     }
@@ -44,13 +41,10 @@ public class Cliente {
         this.telefone = telefone;
     }
 
-    // 🔹 toString (útil pra debug)
     @Override
     public String toString() {
-        return "Cliente{"
-                + "idCliente=" + idCliente
-                + ", nome='" + nome + '\''
-                + ", telefone='" + telefone + '\''
-                + '}';
-    }
+    return "ID: " + idCliente +
+           " | Nome: " + nome +
+           " | Telefone: " + telefone +"\n";
+}
 }
