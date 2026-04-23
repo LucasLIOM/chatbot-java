@@ -64,10 +64,11 @@ public class Main {
                         break;
 
                     case 6:
-                        
+
                         break;
 
                     case 0:
+                        flag = true;
                         break;
 
                     default:
