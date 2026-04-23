@@ -31,23 +31,34 @@ public class ClienteService {
         return "Cliente cadastrado com sucesso!";
     }
 
+    public String serviceAtualizarCliente(int id, String nome, String telefone) {
+        if(id <= 0){
+            return "Dígito do ID não pode ser 0.";
+        }
+        if(nome == null || nome.trim().isEmpty()){
+            return "Nome vazio";
+        }
+        clienteDAO.atualizarCliente(new Cliente(nome, telefone));
+        return "Cliente atualizado com sucesso!";
+    }
+
     public String serviceDeletarCliente(int id) {
 
         if (id <= 0) {
             return "Dígito do ID não pode ser 0.";
-        } 
+        }
         clienteDAO.deletarCliente(id);
         return "Cliente com ID " + id + " deletado com sucesso!";
 
     }
 
-    public List<Cliente> serviceListarCliente(){
+    public List<Cliente> serviceListarCliente() {
         return clienteDAO.listarCliente();
     }
 
-    public String serviceDeletarTudo(){
+    public String serviceDeletarTudo() {
         clienteDAO.deletarTodos();
         return "Todos os clientes deletados.";
-        
+
     }
 }

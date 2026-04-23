@@ -39,8 +39,14 @@ public class Main {
 
                     // Case 2 -> Arrumar.
                     case 2:
-                        // System.out.println(mainService.digitarId());
-                        // String entradaId = sc.nextLine();
+                        System.out.println(mainService.digitarId());
+                        id = sc.nextInt();
+                        sc.nextLine();
+                        System.out.println(mainService.digitarNome());
+                        nome = sc.nextLine();
+                        System.out.println(mainService.digitarTelefone());
+                        telefone = sc.nextLine();
+                        System.out.println(clienteService.serviceAtualizarCliente(id, nome, telefone));
                         break;
 
                     case 3:
@@ -57,8 +63,12 @@ public class Main {
                         System.out.printf(clienteService.serviceDeletarTudo());
                         break;
 
+                    case 6:
+                        
+                        break;
+
                     case 0:
-                    break;
+                        break;
 
                     default:
                         break;

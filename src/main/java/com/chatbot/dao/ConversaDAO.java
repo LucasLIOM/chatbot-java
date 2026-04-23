@@ -9,10 +9,10 @@ import main.java.com.chatbot.config.Conexao;
 public class ConversaDAO {
 
     public int criarConversa(int idCliente) {
-        String sql = "INSERT INTO conversa (id_cliente, data_inicio) VALUES (?, NOW())";
+        String querySql = "INSERT INTO conversa (id_cliente, data_inicio) VALUES (?, NOW())";
 
         try (Connection conn = Conexao.conectar();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(querySql)) {
 
             stmt.setInt(1, idCliente);
             stmt.executeUpdate();

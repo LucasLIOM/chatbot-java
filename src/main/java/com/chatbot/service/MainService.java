@@ -12,11 +12,7 @@ public class MainService {
                 "║ 3  - Deletar cliente              ║\n" +
                 "║ 4  - Listar clientes              ║\n" +
                 "║ 5  - Deletar todos os clientes    ║\n" +
-                "║ 6  - Cadastrar empresa            ║\n" +
-                "║ 7  - Atualizar empresa            ║\n" +
-                "║ 8  - Deletar empresa              ║\n" +
-                "║ 9  - Listar empresas              ║\n" +
-                "║ 10 - Deletar todas as empresas    ║\n" +
+                "║ 6  - Iniciar conversa             ║\n" +
                 "║ 11 - Verificar todas as conversas ║\n" +
                 "║ 0  - Sair                         ║\n" +
                 "╚═══════════════════════════════════╝";
