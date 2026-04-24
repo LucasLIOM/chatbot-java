@@ -1,7 +1,6 @@
 package main.java.com.chatbot.service;
 
 import java.util.List;
-
 import main.java.com.chatbot.dao.ClienteDAO;
 import main.java.com.chatbot.model.Cliente;
 
@@ -32,10 +31,10 @@ public class ClienteService {
     }
 
     public String serviceAtualizarCliente(int id, String nome, String telefone) {
-        if(id <= 0){
+        if (id <= 0) {
             return "Dígito do ID não pode ser 0.";
         }
-        if(nome == null || nome.trim().isEmpty()){
+        if (nome == null || nome.trim().isEmpty()) {
             return "Nome vazio";
         }
         clienteDAO.atualizarCliente(new Cliente(nome, telefone));
