@@ -10,7 +10,7 @@ import main.java.com.chatbot.model.Mensagem;
 
 public class MensagemService {
 
-    public String enviarMensagem(int idCliente, String texto, String tipo) {
+    public String enviarMensage(int idCliente, String texto, String tipo) {
 
         if (idCliente <= 0) {
             return "ID do cliente inválido!";

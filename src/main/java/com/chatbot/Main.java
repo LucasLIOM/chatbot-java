@@ -1,92 +1,89 @@
 package main.java.com.chatbot;
 
 import java.sql.Connection;
-import java.util.Scanner;
+import java.sql.SQLException;
 import main.java.com.chatbot.config.Conexao;
 import main.java.com.chatbot.service.ClienteService;
-import main.java.com.chatbot.service.MainService;
+import main.java.com.chatbot.view.View;
+import main.java.com.chatbot.view.ViewCliente;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        MainService mainService = new MainService();
+        View view = new View();
+        ViewCliente viewCliente = new ViewCliente();
         ClienteService clienteService = new ClienteService();
 
-        Scanner sc = new Scanner(System.in);
-        String nome = "";
-        String telefone = "";
-        int id = 0;
-        boolean flag = false;
+        Integer input, id;
+        String nome, telefone;
+        boolean flag = false, existeCliente;
 
-        try (Connection conn = Conexao.conectar()) {
+        try(Connection conn = Conexao.conectar()) {
 
             while (!flag) {
 
-                System.out.println(mainService.menuCliente());
-                int input = sc.nextInt();
-                sc.nextLine();
+                input = Integer.parseInt(view.readString(viewCliente.menuCliente()));
 
                 switch (input) {
 
-                    case 1:
-                        System.out.println(mainService.digitarNome());
-                        nome = sc.nextLine();
-                        System.out.println(mainService.digitarTelefone());
-                        telefone = sc.nextLine();
-                        System.out.println(clienteService.serviceCadastrarCliente(nome, telefone));
-                        break;
+                    // Inserir clientes
+                    case 1 -> {
+                        nome = view.readString(viewCliente.digitarNome());
+                        telefone = view.readString(viewCliente.digitarTelefone());
+                        view.showM(clienteService.serviceCadastrarCliente(nome, telefone));
+                    }
 
-                    // Case 2 -> Arrumar.
-                    case 2:
-                        System.out.println(mainService.digitarId());
-                        id = sc.nextInt();
-                        sc.nextLine();
-                        System.out.println(mainService.digitarNome());
-                        nome = sc.nextLine();
-                        System.out.println(mainService.digitarTelefone());
-                        telefone = sc.nextLine();
-                        System.out.println(clienteService.serviceAtualizarCliente(id, nome, telefone));
-                        break;
+                    // Atualizar clientes pelo ID
+                    case 2 -> {
 
-                    case 3:
-                        System.out.println(mainService.digitarId());
-                        id = sc.nextInt();
-                        System.out.println(clienteService.serviceDeletarCliente(id));
-                        break;
+                        id = Integer.parseInt(view.readString(viewCliente.digitarId()));
+                        existeCliente = clienteService.isCadastro(id);
+                        view.showM(existeCliente ? "Cliente encontrado!" : "Cliente não encontrado!");
+                        if (existeCliente == true) {
+                            nome = view.readString(viewCliente.digitarNome());
+                            telefone = view.readString(viewCliente.digitarTelefone());
+                            view.showM(clienteService.serviceAtualizarCliente(id, nome, telefone));
+                        }
+                    }
 
-                    case 4:
-                        System.out.println(clienteService.serviceListarCliente());
-                        break;
+                    // Deletar clientes pelo ID
+                    case 3 -> {
+                        id = Integer.parseInt(view.readString(viewCliente.digitarId()));
+                        existeCliente = clienteService.isCadastro(id);
+                        view.showM(existeCliente ? "Cliente encontrado!" : "Cliente não encontrado!");
+                        if (existeCliente == true) {
+                            view.readString(clienteService.serviceDeletarCliente(id));
+                        }
+                    }
 
-                    case 5:
-                        System.out.printf(clienteService.serviceDeletarTudo());
-                        break;
+                    // Listar clientes
+                    case 4 -> {
+                        view.escolherCliente(clienteService.serviceListarCliente());
+                    }
 
-                    case 6:
+                    // Deletar tudo (apenas para reiniciar o ID do banco de dados)
+                    case 5 -> {
+                        view.showM(clienteService.serviceDeletarTudo());
+                    }
 
-                        break;
+                    case 6 -> {
 
-                    case 0:
+                    }
+
+                    case 0 -> {
                         flag = true;
-                        break;
+                    }
 
-                    default:
-                        break;
+                    default -> {
+                        view.showM("Digite algumas das opções.");
+                        return;
+                    }
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            view.showM("Erro: "+e.getMessage());
             e.printStackTrace();
         }
-
-        sc.close();
-    }
-
-    // Verifica se o que o usuário digitou é algo vazio
-    static boolean verificaInput(String mensagem) {
-        if (mensagem == null || mensagem.isEmpty()) {
-            return false;
-        }
-        return true;
     }
 }

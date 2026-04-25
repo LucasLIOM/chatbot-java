@@ -3,7 +3,6 @@ package main.java.com.chatbot.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import main.java.com.chatbot.config.Conexao;
 import main.java.com.chatbot.model.Cliente;
 import main.java.com.chatbot.model.Conversa;
@@ -33,13 +32,13 @@ public class ConversaDAO {
         return null;
     }
 
-    public int criarConversa(Cliente cliente) {
+    public int criarConversa(int idCliente) {
         String querySql = "INSERT INTO conversa (id_cliente, data_inicio) VALUES (?, NOW())";
 
         try (Connection conn = Conexao.conectar();
                 PreparedStatement stmt = conn.prepareStatement(querySql)) {
 
-            stmt.setInt(1, cliente.getIdCliente());
+            stmt.setInt(1, idCliente);
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();

@@ -6,7 +6,7 @@ import main.java.com.chatbot.model.Cliente;
 
 public class ClienteService {
 
-    private ClienteDAO clienteDAO = new ClienteDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
 
     public String serviceCadastrarCliente(String nome, String telefone) {
 
@@ -30,24 +30,25 @@ public class ClienteService {
         return "Cliente cadastrado com sucesso!";
     }
 
-    public String serviceAtualizarCliente(int id, String nome, String telefone) {
-        if (id <= 0) {
+    public String serviceAtualizarCliente(int idCliente, String nome, String telefone) {
+
+        if (idCliente <= 0) {
             return "Dígito do ID não pode ser 0.";
         }
         if (nome == null || nome.trim().isEmpty()) {
             return "Nome vazio";
         }
-        clienteDAO.atualizarCliente(new Cliente(nome, telefone));
+        clienteDAO.atualizarCliente(idCliente, nome, telefone);
         return "Cliente atualizado com sucesso!";
     }
 
-    public String serviceDeletarCliente(int id) {
+    public String serviceDeletarCliente(int idCliente) {
 
-        if (id <= 0) {
+        if (idCliente <= 0) {
             return "Dígito do ID não pode ser 0.";
         }
-        clienteDAO.deletarCliente(id);
-        return "Cliente com ID " + id + " deletado com sucesso!";
+        clienteDAO.deletarCliente(idCliente);
+        return "Cliente com ID " + idCliente + " deletado com sucesso!";
 
     }
 
@@ -58,6 +59,13 @@ public class ClienteService {
     public String serviceDeletarTudo() {
         clienteDAO.deletarTodos();
         return "Todos os clientes deletados.";
+    }
 
+    public boolean isCadastro(int idCliente) {
+        if (idCliente <= 0) {
+            return false;
+        }
+
+        return clienteDAO.buscarCliente(idCliente);
     }
 }

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-
 import main.java.com.chatbot.config.Conexao;
 import main.java.com.chatbot.model.Cliente;
 
@@ -27,8 +26,7 @@ public class ClienteDAO {
         // tratamentos de exceção, caso de erro ele evita que a aplicação perca a
         // conexão com o banco de dados
         // e evita do banco guardar informações erradas no processo.
-        try (Connection conn = Conexao.conectar();
-                PreparedStatement stmt = conn.prepareStatement(querySql)) {
+        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql)) {
 
             // Executando as querys da variavel querySql, pega a posição (indice) e insere o
             // atributo que
@@ -40,6 +38,7 @@ public class ClienteDAO {
             stmt.executeUpdate();
 
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -50,8 +49,7 @@ public class ClienteDAO {
 
         List<Cliente> lista = new ArrayList<>();
 
-        try (Connection conn = Conexao.conectar();
-                PreparedStatement stmt = conn.prepareStatement(querySql)) {
+        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql)) {
 
             ResultSet rs = stmt.executeQuery();
 
@@ -65,52 +63,71 @@ public class ClienteDAO {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return lista;
     }
 
-    public void atualizarCliente(Cliente cliente) {
+    public void atualizarCliente(int idCliente, String nome, String telefone) {
         String querySql = "UPDATE cliente SET nome = ?, telefone = ? WHERE id_cliente = ?";
 
-        try (Connection conn = Conexao.conectar();
-                PreparedStatement stmt = conn.prepareStatement(querySql)) {
+        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql)) {
 
-            stmt.setString(1, cliente.getNome());
-            stmt.setString(2, cliente.getTelefone());
-            stmt.setInt(3, cliente.getIdCliente());
+            stmt.setString(1, nome);
+            stmt.setString(2, telefone);
+            stmt.setInt(3, idCliente);
 
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public void deletarCliente(int id) {
+    public void deletarCliente(int idCliente) {
         String querySql = "DELETE FROM cliente WHERE id_cliente = ?";
 
-        try (Connection conn = Conexao.conectar();
-                PreparedStatement stmt = conn.prepareStatement(querySql)) {
+        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql)) {
 
-            stmt.setInt(1, id);
+            stmt.setInt(1, idCliente);
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     public void deletarTodos() {
         String querySql = "DELETE FROM cliente";
 
-        try (Connection conn = Conexao.conectar();
-                PreparedStatement stmt = conn.prepareStatement(querySql)) {
+        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql)) {
             stmt.executeUpdate();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    public boolean buscarCliente(int idCliente) {
+        String querySql = "SELECT id_cliente FROM cliente WHERE id_cliente = ?";
+
+        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql)) {
+
+            stmt.setInt(1, idCliente);
+
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
     }
 }
