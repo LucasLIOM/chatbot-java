@@ -5,28 +5,28 @@ import java.time.LocalDateTime;
 public class Mensagem {
 
     private Integer idMensagem;
-    private Conversa conversa;
+    private Integer idConversa;
     private String texto;
     private String tipo;
     private LocalDateTime dataHora;
 
-    public Mensagem(Conversa conversa, String texto, String tipo) {
-        this.conversa = conversa;
-        this.texto = texto;
-        this.tipo = tipo;
-        this.dataHora = LocalDateTime.now();
-    }
-
-    public Mensagem(Integer idMensagem, Conversa conversa, String texto, String tipo, LocalDateTime dataHora) {
-        this.idMensagem = idMensagem;
-        this.conversa = conversa;
+    public Mensagem(Integer idConversa, String texto, String tipo, LocalDateTime dataHora) {
+        this.idConversa = idConversa;
         this.texto = texto;
         this.tipo = tipo;
         this.dataHora = dataHora;
     }
 
-    public void setConversa(Conversa conversa) {
-        this.conversa = conversa;
+    public Mensagem(Integer idMensagem, Integer idConversa, String texto, String tipo, LocalDateTime dataHora) {
+        this.idMensagem = idMensagem;
+        this.idConversa = idConversa;
+        this.texto = texto;
+        this.tipo = tipo;
+        this.dataHora = dataHora;
+    }
+
+    public void setIdConversa(Integer idConversa) {
+        this.idConversa = idConversa;
     }
 
     public void setDataHora(LocalDateTime dataHora) {
@@ -49,8 +49,8 @@ public class Mensagem {
         return idMensagem;
     }
 
-    public Conversa getConversa() {
-        return conversa;
+    public Integer getIdConversa() {
+        return idConversa;
     }
 
     public String getTexto() {

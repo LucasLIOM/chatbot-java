@@ -14,7 +14,7 @@ public class ViewCliente {
                 ║ 4  - Listar clientes              ║
                 ║ 5  - Deletar todos os clientes    ║
                 ║ 6  - Iniciar conversa             ║
-                ║ 11 - Verificar todas as conversas ║
+                ║ 7  - Verificar todas as conversas ║
                 ║ 0  - Sair                         ║
                 ╚═══════════════════════════════════╝
                 """;
@@ -30,5 +30,9 @@ public class ViewCliente {
 
     public String digitarId() {
         return "Id do cliente:";
+    }
+
+    public String digitarTexto() {
+        return "Digite seu texto ou 'sair' para voltar ao menu inicial:";
     }
 }

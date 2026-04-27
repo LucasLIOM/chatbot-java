@@ -1,57 +1,25 @@
 package main.java.com.chatbot.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import main.java.com.chatbot.dao.ConversaDAO;
 import main.java.com.chatbot.dao.MensagemDAO;
-import main.java.com.chatbot.model.Cliente;
 import main.java.com.chatbot.model.Conversa;
-import main.java.com.chatbot.model.Mensagem;
 
 public class MensagemService {
 
-    public String enviarMensage(int idCliente, String texto, String tipo) {
+    private final ConversaService conversaService = new ConversaService();
+    private final MensagemDAO mensagemDAO = new MensagemDAO();
 
-        if (idCliente <= 0) {
-            return "ID do cliente inválido!";
+    public void enviarMensagem(int idCliente, String texto, String tipo) {
+
+        if (texto == null || texto.trim().isEmpty()) {
+            throw new IllegalArgumentException("Mensagem vazia.");
         }
 
-        if (texto == null || texto.isEmpty()) {
-            return "Texto não pode ficar vazio!";
+        if (!tipo.equalsIgnoreCase("cliente") && !tipo.equalsIgnoreCase("bot")) {
+            throw new IllegalArgumentException("Tipo inválido.");
         }
 
-        if (texto.length() > 400) {
-            return "Texto máximo: 400 caracteres.";
-        }
+        Conversa conversa = conversaService.buscarOuCriar(idCliente);
 
-        ConversaDAO conversaDAO = new ConversaDAO();
-        MensagemDAO mensagemDAO = new MensagemDAO();
-
-        String typePessoa = tipo.equalsIgnoreCase("cliente") ? "cliente" : "bot";
-
-        Conversa conversa = conversaDAO.buscarConversa(idCliente);
-
-        if (conversa == null) {
-            int id = conversaDAO.criarConversa(idCliente);
-            conversa = new Conversa(id, null, null);
-        }
-
-        mensagemDAO.criarMensagem(conversa, texto, typePessoa);
-
-        return "Nova mensagem criada!";
-    }
-
-    public List<Mensagem> buscarHistorico(Cliente cliente) {
-
-        ConversaDAO conversaDAO = new ConversaDAO();
-        MensagemDAO mensagemDAO = new MensagemDAO();
-
-        Conversa conversa = conversaDAO.buscarConversa(cliente.getIdCliente());
-
-        if (conversa == null) {
-            return new ArrayList<>();
-        }
-
-        return mensagemDAO.listarMensagems(conversa.getIdConversa());
+        mensagemDAO.criarMensagem(conversa, texto, tipo);
     }
 }

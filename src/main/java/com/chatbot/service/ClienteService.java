@@ -8,64 +8,49 @@ public class ClienteService {
 
     private final ClienteDAO clienteDAO = new ClienteDAO();
 
-    public String serviceCadastrarCliente(String nome, String telefone) {
+    public void validarCliente(int idCliente) {
+        if (idCliente <= 0) {
+            throw new IllegalArgumentException("ID inválido.");
+        }
 
+        if (!clienteDAO.buscarCliente(idCliente)) {
+            throw new IllegalArgumentException("Cliente não encontrado.");
+        }
+    }
+
+    public String inserirCliente(String nome, String telefone) {
         if (nome == null || nome.trim().isEmpty()) {
-            return "Nome não pode está em branco!";
-        }
-
-        if (nome.length() < 3) {
-            return "Nome precisa ter pelo menos 3 caracteres!";
-        }
-
-        if (telefone == null || telefone.trim().isEmpty()) {
-            return "Telefone não pode ter espaços e nem ficar em branco!";
-        }
-
-        if (telefone.length() > 11 || telefone.length() < 10) {
-            return "Número de telefone precisa ter 11 dígitos!";
+            return "Nome inválido.";
         }
 
         clienteDAO.inserirCliente(new Cliente(nome, telefone));
         return "Cliente cadastrado com sucesso!";
     }
 
-    public String serviceAtualizarCliente(int idCliente, String nome, String telefone) {
+    public String atualizarCliente(int id, String nome, String telefone) {
+        validarCliente(id);
 
-        if (idCliente <= 0) {
-            return "Dígito do ID não pode ser 0.";
-        }
-        if (nome == null || nome.trim().isEmpty()) {
-            return "Nome vazio";
-        }
-        clienteDAO.atualizarCliente(idCliente, nome, telefone);
+        clienteDAO.atualizarCliente(id, nome, telefone);
         return "Cliente atualizado com sucesso!";
     }
 
-    public String serviceDeletarCliente(int idCliente) {
+    public String deletarCliente(int id) {
+        validarCliente(id);
 
-        if (idCliente <= 0) {
-            return "Dígito do ID não pode ser 0.";
-        }
-        clienteDAO.deletarCliente(idCliente);
-        return "Cliente com ID " + idCliente + " deletado com sucesso!";
-
+        clienteDAO.deletarCliente(id);
+        return "Cliente deletado com sucesso!";
     }
 
-    public List<Cliente> serviceListarCliente() {
+    public List<Cliente> listarClientes() {
         return clienteDAO.listarCliente();
     }
 
-    public String serviceDeletarTudo() {
+    public String deletarTudo() {
         clienteDAO.deletarTodos();
         return "Todos os clientes deletados.";
     }
 
-    public boolean isCadastro(int idCliente) {
-        if (idCliente <= 0) {
-            return false;
-        }
-
-        return clienteDAO.buscarCliente(idCliente);
+    public boolean existe(int id) {
+        return clienteDAO.buscarCliente(id);
     }
 }

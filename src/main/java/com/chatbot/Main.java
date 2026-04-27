@@ -1,9 +1,10 @@
 package main.java.com.chatbot;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import main.java.com.chatbot.config.Conexao;
+import main.java.com.chatbot.bot.BotService;
+import main.java.com.chatbot.dao.MensagemDAO;
 import main.java.com.chatbot.service.ClienteService;
+import main.java.com.chatbot.service.ConversaService;
+import main.java.com.chatbot.service.MensagemService;
 import main.java.com.chatbot.view.View;
 import main.java.com.chatbot.view.ViewCliente;
 
@@ -13,77 +14,111 @@ public class Main {
 
         View view = new View();
         ViewCliente viewCliente = new ViewCliente();
+
         ClienteService clienteService = new ClienteService();
+        MensagemService mensagemService = new MensagemService();
+        ConversaService conversaService = new ConversaService();
+        BotService botService = new BotService();
 
-        Integer input, id;
-        String nome, telefone;
-        boolean flag = false, existeCliente;
+        boolean flag = false;
 
-        try(Connection conn = Conexao.conectar()) {
+        while (!flag) {
 
-            while (!flag) {
+            try {
+                int opcao = Integer.parseInt(view.readString(viewCliente.menuCliente()));
 
-                input = Integer.parseInt(view.readString(viewCliente.menuCliente()));
+                switch (opcao) {
 
-                switch (input) {
-
-                    // Inserir clientes
                     case 1 -> {
-                        nome = view.readString(viewCliente.digitarNome());
-                        telefone = view.readString(viewCliente.digitarTelefone());
-                        view.showM(clienteService.serviceCadastrarCliente(nome, telefone));
+                        String nome = view.readString(viewCliente.digitarNome());
+                        String telefone = view.readString(viewCliente.digitarTelefone());
+                        view.showM(clienteService.inserirCliente(nome, telefone));
                     }
 
-                    // Atualizar clientes pelo ID
                     case 2 -> {
-
-                        id = Integer.parseInt(view.readString(viewCliente.digitarId()));
-                        existeCliente = clienteService.isCadastro(id);
-                        view.showM(existeCliente ? "Cliente encontrado!" : "Cliente não encontrado!");
-                        if (existeCliente == true) {
-                            nome = view.readString(viewCliente.digitarNome());
-                            telefone = view.readString(viewCliente.digitarTelefone());
-                            view.showM(clienteService.serviceAtualizarCliente(id, nome, telefone));
-                        }
+                        int id = Integer.parseInt(view.readString(viewCliente.digitarId()));
+                        String nome = view.readString(viewCliente.digitarNome());
+                        String telefone = view.readString(viewCliente.digitarTelefone());
+                        view.showM(clienteService.atualizarCliente(id, nome, telefone));
                     }
 
-                    // Deletar clientes pelo ID
                     case 3 -> {
-                        id = Integer.parseInt(view.readString(viewCliente.digitarId()));
-                        existeCliente = clienteService.isCadastro(id);
-                        view.showM(existeCliente ? "Cliente encontrado!" : "Cliente não encontrado!");
-                        if (existeCliente == true) {
-                            view.readString(clienteService.serviceDeletarCliente(id));
-                        }
+                        int id = Integer.parseInt(view.readString(viewCliente.digitarId()));
+                        view.showM(clienteService.deletarCliente(id));
                     }
 
-                    // Listar clientes
                     case 4 -> {
-                        view.escolherCliente(clienteService.serviceListarCliente());
+                        view.showM(clienteService.listarClientes().toString());
                     }
 
-                    // Deletar tudo (apenas para reiniciar o ID do banco de dados)
                     case 5 -> {
-                        view.showM(clienteService.serviceDeletarTudo());
+                        view.showM(clienteService.deletarTudo());
                     }
 
                     case 6 -> {
+                        int id = Integer.parseInt(view.readString(viewCliente.digitarId()));
 
+                        while (true) {
+                            String texto = view.readString(viewCliente.digitarTexto());
+
+                            if (texto == null || texto.equalsIgnoreCase("sair")) {
+                                break;
+                            }
+
+                            mensagemService.enviarMensagem(id, texto, "cliente");
+
+                            String resposta = botService.respostaBot(texto);
+
+                            mensagemService.enviarMensagem(id, resposta, "bot");
+
+                            view.showM("🤖 Bot: " + resposta);
+                        }
                     }
+                    case 7 -> {
+                        var conversas = conversaService.listar();
+                        MensagemDAO mensagemDAO = new MensagemDAO();
 
-                    case 0 -> {
+                        if (conversas.isEmpty()) {
+                            view.showM("Nenhuma conversa encontrada.");
+                        } else {
+
+                            StringBuilder sb = new StringBuilder();
+
+                            for (var c : conversas) {
+
+                                sb.append("=================================\n");
+                                sb.append("Conversa ID: ").append(c.getIdConversa()).append("\n");
+                                sb.append("Cliente: ").append(c.getCliente().getNome()).append("\n\n");
+
+                                var mensagens = mensagemDAO.listarMensagens(c.getIdConversa());
+
+                                if (mensagens.isEmpty()) {
+                                    sb.append("Sem mensagens.\n");
+                                } else {
+                                    for (var m : mensagens) {
+                                        sb.append(m.getTipo().toUpperCase())
+                                                .append(": ")
+                                                .append(m.getTexto())
+                                                .append("\n");
+                                    }
+                                }
+
+                                sb.append("\n");
+                            }
+
+                            view.showM(sb.toString());
+                        }
+                    }
+                    case 0 ->
                         flag = true;
-                    }
 
-                    default -> {
-                        view.showM("Digite algumas das opções.");
-                        return;
-                    }
+                    default ->
+                        view.showM("Opção inválida.");
                 }
+
+            } catch (Exception e) {
+                view.showM("Erro: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            view.showM("Erro: "+e.getMessage());
-            e.printStackTrace();
         }
     }
 }
