@@ -8,6 +8,7 @@ public class ClienteService {
 
     private final ClienteDAO clienteDAO = new ClienteDAO();
 
+    // O service para fazer validações com if
     public void validarCliente(int idCliente) {
         if (idCliente <= 0) {
             throw new IllegalArgumentException("ID inválido.");

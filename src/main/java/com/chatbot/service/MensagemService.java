@@ -8,6 +8,7 @@ public class MensagemService {
     private final ConversaService conversaService = new ConversaService();
     private final MensagemDAO mensagemDAO = new MensagemDAO();
 
+    // Enviar as mensagens, guarda os dados e então cria de acordo com os parametros abaixo
     public void enviarMensagem(int idCliente, String texto, String tipo) {
 
         if (texto == null || texto.trim().isEmpty()) {

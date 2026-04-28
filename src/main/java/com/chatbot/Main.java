@@ -22,19 +22,24 @@ public class Main {
 
         boolean flag = false;
 
+        // Falta ainda tirar essa robustez da classe main, futuramente vai ser algo mais "clean"
+        // Ciclo while, começa com falso, para com true
         while (!flag) {
 
             try {
+                // Opção int, o readString le caracteres e "transforma o valor em inteiro"
                 int opcao = Integer.parseInt(view.readString(viewCliente.menuCliente()));
 
-                switch (opcao) {
+                switch (opcao) { // Começa o menu de acordo com a opção do usuario
 
+                    // Criar cadastro
                     case 1 -> {
                         String nome = view.readString(viewCliente.digitarNome());
                         String telefone = view.readString(viewCliente.digitarTelefone());
                         view.showM(clienteService.inserirCliente(nome, telefone));
                     }
 
+                    // Atualiza cliente
                     case 2 -> {
                         int id = Integer.parseInt(view.readString(viewCliente.digitarId()));
                         String nome = view.readString(viewCliente.digitarNome());
@@ -42,19 +47,23 @@ public class Main {
                         view.showM(clienteService.atualizarCliente(id, nome, telefone));
                     }
 
+                    // Deleta o cliente
                     case 3 -> {
                         int id = Integer.parseInt(view.readString(viewCliente.digitarId()));
                         view.showM(clienteService.deletarCliente(id));
                     }
 
+                    // Lista cliente
                     case 4 -> {
                         view.showM(clienteService.listarClientes().toString());
                     }
 
+                    // Deleta tudo
                     case 5 -> {
                         view.showM(clienteService.deletarTudo());
                     }
 
+                    // Criar as mensagens
                     case 6 -> {
                         int id = Integer.parseInt(view.readString(viewCliente.digitarId()));
 
@@ -66,14 +75,13 @@ public class Main {
                             }
 
                             mensagemService.enviarMensagem(id, texto, "cliente");
-
                             String resposta = botService.respostaBot(texto);
-
                             mensagemService.enviarMensagem(id, resposta, "bot");
-
                             view.showM("🤖 Bot: " + resposta);
                         }
                     }
+
+                    // Listar as conversas agrupadas
                     case 7 -> {
                         var conversas = conversaService.listar();
                         MensagemDAO mensagemDAO = new MensagemDAO();
@@ -109,6 +117,7 @@ public class Main {
                             view.showM(sb.toString());
                         }
                     }
+                    // Para o programa
                     case 0 ->
                         flag = true;
 

@@ -11,6 +11,7 @@ import main.java.com.chatbot.model.Conversa;
 
 public class ConversaDAO {
 
+    // Busca a conversa com o ID do cliente
     public Conversa buscarConversaPorId(int idCliente) {
         String querySql = "SELECT * FROM conversa WHERE id_cliente = ?";
 
@@ -33,10 +34,12 @@ public class ConversaDAO {
         return null;
     }
 
+    // Se o cliente cadastrado não tiver conversa (null) cria uma a partir das mensagens criadas
     public int criarConversa(int idCliente) {
-        String querySql = "INSERT INTO conversa (id_cliente, data_inicio) VALUES (?, NOW())";
+        String querySql = "INSERT INTO conversa (id_cliente) VALUES (?)";
 
-        try (Connection conn = Conexao.conectar(); PreparedStatement stmt = conn.prepareStatement(querySql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(querySql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, idCliente);
             stmt.executeUpdate();
@@ -53,12 +56,13 @@ public class ConversaDAO {
         return -1;
     }
 
+    // Lista as conversas presentes
     public List<Conversa> listarConversa() {
         String querySql = """
-        SELECT c.id_conversa, c.id_cliente, cl.nome
-        FROM conversa c
-        JOIN cliente cl ON c.id_cliente = cl.id_cliente
-    """;
+                    SELECT c.id_conversa, c.id_cliente, cl.nome
+                    FROM conversa c
+                    JOIN cliente cl ON c.id_cliente = cl.id_cliente
+                """;
 
         List<Conversa> lista = new ArrayList<>();
 
@@ -70,20 +74,18 @@ public class ConversaDAO {
                 Cliente cliente = new Cliente(
                         rs.getInt("id_cliente"),
                         rs.getString("nome"),
-                        null
-                );
+                        null);
 
                 lista.add(new Conversa(
                         rs.getInt("id_conversa"),
                         cliente,
-                        null
-                ));
+                        null));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return lista;
+        return lista; // Retorna a lista de conversas
     }
 }

@@ -44,6 +44,7 @@ public class ClienteDAO {
 
     }
 
+    // Lista todos os clientes
     public List<Cliente> listarCliente() {
         String querySql = "SELECT * FROM cliente";
 
@@ -70,6 +71,9 @@ public class ClienteDAO {
         return lista;
     }
 
+    // Atualiza o cliente de acordo com o idCliente, passa-se o nome e telefone e altera ambos
+    // Lembrar: verificação de telefone duplicado
+    // Escolher o que vai ser alterado
     public void atualizarCliente(int idCliente, String nome, String telefone) {
         String querySql = "UPDATE cliente SET nome = ?, telefone = ? WHERE id_cliente = ?";
 
@@ -87,6 +91,7 @@ public class ClienteDAO {
         }
     }
 
+    // Deleta o cliente com o idCliente, puxa o id e deleta
     public void deletarCliente(int idCliente) {
         String querySql = "DELETE FROM cliente WHERE id_cliente = ?";
 
@@ -101,6 +106,7 @@ public class ClienteDAO {
         }
     }
 
+    // Usa-se para deletar todos, mais para reiniciar o id do banco
     public void deletarTodos() {
         String querySql = "DELETE FROM cliente";
 
@@ -113,6 +119,8 @@ public class ClienteDAO {
         }
     }
 
+    // Busca os clientes com o idCliente, se for true ele retorna o cliente
+    // false = cancela a busca
     public boolean buscarCliente(int idCliente) {
         String querySql = "SELECT id_cliente FROM cliente WHERE id_cliente = ?";
 

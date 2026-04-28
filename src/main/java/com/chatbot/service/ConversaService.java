@@ -16,6 +16,11 @@ public class ConversaService {
 
         if (conversa == null) {
             int id = conversaDAO.criarConversa(idCliente);
+
+            if (id <= 0) {
+                throw new RuntimeException("Erro ao criar conversa");
+            }
+
             return new Conversa(id, null, null);
         }
 
